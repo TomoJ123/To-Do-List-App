@@ -60,7 +60,11 @@ class DetailViewController: UIViewController {
         switch actionPicker {
             case .add:
                 if let title = taskTitle.text, let description = taskDescription.text {
-                    if title.isEmpty || description.isEmpty { } //bacit alert
+                    if title.isEmpty || description.isEmpty {
+                        let alert = UIAlertController(title: "Warning", message: "You must fill all the fields", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+                        present(alert, animated: true, completion: nil)
+                    } 
                     else {
                         delegate?.createTask(string: title, string: description)
                         dismiss(animated: true, completion: nil)
@@ -68,7 +72,11 @@ class DetailViewController: UIViewController {
                 }
             case .readEdit:
                 if let title = taskTitle.text, let description = taskDescription.text {
-                    if title.isEmpty || description.isEmpty { } //bacit alert
+                    if title.isEmpty || description.isEmpty {
+                        let alert = UIAlertController(title: "Warning", message: "You must fill all the fields", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+                        present(alert, animated: true, completion: nil)
+                    }
                     else {
                         if let task = taskToShow {
                             delegate?.updateTask(task: task, title: title, taskDescription: description)

@@ -20,8 +20,9 @@ enum actions {
 class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate {
     @IBOutlet var searchBar: UISearchBar!
     
+    let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
     var allTasks = [Task]()
-    var filteredTasks: [Task]!
+    lazy var filteredTasks = allTasks
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,17 +31,15 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTaskButton))
         navigationItem.leftBarButtonItem = editButtonItem
         getAllTasks()
-        filteredTasks = allTasks
     }
     
     func getAllTasks() {
         let request = Task.createfetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "orderIndex", ascending: true)]
         do {
-            allTasks = try (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext.fetch(request)
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+            allTasks = try appDelegate.persistentContainer.viewContext.fetch(request)
+            
+            self.tableView.reloadData()
             filteredTasks = allTasks
         }
         catch {
@@ -49,7 +48,7 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
     }
     
     func createTask(string title: String, string description: String ) {
-        let newTask = Task(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+        let newTask = Task(context: appDelegate.persistentContainer.viewContext)
         newTask.title = title
         newTask.taskDescription = description
         newTask.orderIndex = Int32(filteredTasks.count)
@@ -57,18 +56,16 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
         allTasks.append(newTask)
         filteredTasks.append(newTask)
         
-        for (index, item) in allTasks.enumerated() {
-            item.orderIndex = Int32(index)
-        }
+        ReorderBase()
 
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        appDelegate.saveContext()
         tableView.reloadData()
     }
     
     func updateTask(task: Task, title: String, taskDescription: String) {
         task.title = title
         task.taskDescription = taskDescription
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        appDelegate.saveContext()
         tableView.reloadData()
     }
     
@@ -99,17 +96,15 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let task = filteredTasks[indexPath.row]
-            (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext.delete(task)
+            appDelegate.persistentContainer.viewContext.delete(task)
             filteredTasks.remove(at: indexPath.row)
             guard let taskToDelete = allTasks.firstIndex(of: task) else { return }
             allTasks.remove(at: taskToDelete)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
-            for (index, item) in allTasks.enumerated() {
-                item.orderIndex = Int32(index)
-            }
+            ReorderBase()
             
-            (UIApplication.shared.delegate as! AppDelegate).saveContext()
+            appDelegate.saveContext()
         }
     }
     
@@ -119,10 +114,9 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
         allTasks.insert(movedObject, at: destinationIndexPath.row)
         filteredTasks = allTasks
         
-        for (index, item) in allTasks.enumerated() {
-            item.orderIndex = Int32(index)
-        }
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        ReorderBase()
+        
+        appDelegate.saveContext()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -139,6 +133,12 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
             }
         }
         self.tableView.reloadData()
+    }
+    
+    func ReorderBase() {
+        for (index, item) in allTasks.enumerated() {
+            item.orderIndex = Int32(index)
+        }
     }
     
     @objc func addTaskButton() {
