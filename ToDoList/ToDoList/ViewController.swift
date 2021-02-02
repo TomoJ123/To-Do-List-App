@@ -17,20 +17,39 @@ enum actions {
     case readEdit
 }
 
+extension ViewController: UISearchResultsUpdating {
+  func updateSearchResults(for searchController: UISearchController) {
+    let searchBar = searchController.searchBar
+    filterForSearchBar(searchBar.text!)
+  }
+}
+
 class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate {
-    @IBOutlet var searchBar: UISearchBar!
     
     let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
     var allTasks = [Task]()
-    lazy var filteredTasks = allTasks
+    var filteredTasks: [Task] = []
+    let searchController = UISearchController(searchResultsController: nil)
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-        searchBar.delegate = self
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTaskButton))
         navigationItem.leftBarButtonItem = editButtonItem
         getAllTasks()
+        
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search tasks"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+    }
+    
+    var isSearchBarEmpty: Bool {
+      return searchController.searchBar.text?.isEmpty ?? true
+    }
+    var isFiltering: Bool {
+      return searchController.isActive && !isSearchBarEmpty
     }
     
     func getAllTasks() {
@@ -38,9 +57,7 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
         request.sortDescriptors = [NSSortDescriptor(key: "orderIndex", ascending: true)]
         do {
             allTasks = try appDelegate.persistentContainer.viewContext.fetch(request)
-            
             self.tableView.reloadData()
-            filteredTasks = allTasks
         }
         catch {
             print("Failed to load all your tasks!")
@@ -51,13 +68,10 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
         let newTask = Task(context: appDelegate.persistentContainer.viewContext)
         newTask.title = title
         newTask.taskDescription = description
-        newTask.orderIndex = Int32(filteredTasks.count)
-        
+        newTask.orderIndex = Int32(allTasks.count)
         allTasks.append(newTask)
-        filteredTasks.append(newTask)
         
         ReorderBase()
-
         appDelegate.saveContext()
         tableView.reloadData()
     }
@@ -70,12 +84,21 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredTasks.count
+        if isFiltering {
+           return filteredTasks.count
+         }
+         return allTasks.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let task = filteredTasks[indexPath.row]
+        let task: Task
+        
+        if isFiltering {
+            task = filteredTasks[indexPath.row]
+        } else {
+            task = allTasks[indexPath.row]
+        }
         cell.textLabel?.text = task.title
         cell.detailTextLabel?.text = task.taskDescription
         return cell
@@ -87,19 +110,30 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
             let navController = UINavigationController(rootViewController: vc)
             vc.delegate = self
             vc.actionPicker = .readEdit
-            vc.taskToShow = filteredTasks[indexPath.row]
-            tableView.deselectRow(at: indexPath, animated: true)
+            if isFiltering {
+                vc.taskToShow = filteredTasks[indexPath.row]
+                tableView.deselectRow(at: indexPath, animated: true)
+            } else {
+                vc.taskToShow = allTasks[indexPath.row]
+                tableView.deselectRow(at: indexPath, animated: true)
+            }
             present(navController, animated: true, completion: nil)
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let task = filteredTasks[indexPath.row]
+            let task: Task
+            if isFiltering {
+                task = filteredTasks[indexPath.row]
+                filteredTasks.remove(at: indexPath.row)
+                guard let taskToDelete = allTasks.firstIndex(of: task) else { return }
+                allTasks.remove(at: taskToDelete)
+            } else {
+                task = allTasks[indexPath.row]
+                allTasks.remove(at: indexPath.row)
+            }
             appDelegate.persistentContainer.viewContext.delete(task)
-            filteredTasks.remove(at: indexPath.row)
-            guard let taskToDelete = allTasks.firstIndex(of: task) else { return }
-            allTasks.remove(at: taskToDelete)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
             ReorderBase()
@@ -112,27 +146,10 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
         let movedObject = self.allTasks[sourceIndexPath.row]
         allTasks.remove(at: sourceIndexPath.row)
         allTasks.insert(movedObject, at: destinationIndexPath.row)
-        filteredTasks = allTasks
         
         ReorderBase()
         
         appDelegate.saveContext()
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filteredTasks = []
-        
-        if searchBar.text == "" {
-            filteredTasks = allTasks
-        }
-        else {
-            for task in allTasks {
-                if task.title.lowercased().contains(searchText.lowercased()) || task.taskDescription.lowercased().contains(searchText.lowercased()) {
-                    filteredTasks.append(task)
-                }
-            }
-        }
-        self.tableView.reloadData()
     }
     
     func ReorderBase() {
@@ -150,25 +167,11 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
         }
     }
     
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        editButtonItem.isEnabled = false
-        searchBar.setShowsCancelButton(true, animated: true)
+    func filterForSearchBar(_ searchText: String) {
+      filteredTasks = allTasks.filter { (task: Task) -> Bool in
+        return task.title.lowercased().contains(searchText.lowercased())
+      }
+      tableView.reloadData()
     }
-    
-    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        searchBar.text = ""
-        filteredTasks = allTasks
-        editButtonItem.isEnabled = true
-        searchBar.setShowsCancelButton(false, animated: true)
-        self.tableView.reloadData()
-        return true
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-    }
-    
-  
-   
 }
 
