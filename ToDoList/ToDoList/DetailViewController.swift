@@ -24,9 +24,13 @@ class DetailViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addTaskTapped))
         
         taskTitle.layer.borderWidth = 1
-        taskTitle.layer.borderColor = UIColor.systemBlue.cgColor
+        taskTitle.layer.borderColor = UIColor.lightGray.cgColor
+        taskTitle.layer.cornerRadius = 8.0
+        taskTitle.layer.borderWidth = 2.0
         taskDescription!.layer.borderWidth = 1
-        taskDescription!.layer.borderColor = UIColor.systemBlue.cgColor
+        taskDescription!.layer.borderColor = UIColor.lightGray.cgColor
+        taskDescription.layer.cornerRadius = 8.0
+        taskDescription.layer.borderWidth = 2.0
 
         decideAction()
     }

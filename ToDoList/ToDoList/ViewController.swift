@@ -128,9 +128,9 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filteredTasks = []
         
-        if searchText == "" {
+        if searchBar.text == "" {
             filteredTasks = allTasks
-        } //mozda sve ovo stavit u vanjsku funkciju i onda pozvat na dvi strane
+        }
         else {
             for task in allTasks {
                 if task.title.lowercased().contains(searchText.lowercased()) || task.taskDescription.lowercased().contains(searchText.lowercased()) {
@@ -157,8 +157,10 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
     
     func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.text = ""
+        filteredTasks = allTasks
         editButtonItem.isEnabled = true
         searchBar.setShowsCancelButton(false, animated: true)
+        self.tableView.reloadData()
         return true
     }
     
