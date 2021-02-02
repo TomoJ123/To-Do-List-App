@@ -27,8 +27,8 @@ class DetailViewController: UIViewController {
         taskTitle.layer.borderColor = UIColor.lightGray.cgColor
         taskTitle.layer.cornerRadius = 8.0
         taskTitle.layer.borderWidth = 2.0
-        taskDescription!.layer.borderWidth = 1
-        taskDescription!.layer.borderColor = UIColor.lightGray.cgColor
+        taskDescription.layer.borderWidth = 1
+        taskDescription.layer.borderColor = UIColor.lightGray.cgColor
         taskDescription.layer.cornerRadius = 8.0
         taskDescription.layer.borderWidth = 2.0
 
@@ -64,7 +64,7 @@ class DetailViewController: UIViewController {
                         let alert = UIAlertController(title: "Warning", message: "You must fill all the fields", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
                         present(alert, animated: true, completion: nil)
-                    } 
+                    }
                     else {
                         delegate?.createTask(string: title, string: description)
                         dismiss(animated: true, completion: nil)
