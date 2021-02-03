@@ -62,7 +62,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name of task" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IcC-tI-46S">
-                                <rect key="frame" x="35" y="181.5" width="339" height="28"/>
+                                <rect key="frame" x="35" y="190" width="339" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="mfD-5f-Ubw"/>
                                 </constraints>
@@ -70,13 +70,13 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dJx-UJ-qqt">
-                                <rect key="frame" x="35" y="282.5" width="339" height="444.5"/>
+                                <rect key="frame" x="35" y="291" width="339" height="487"/>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c7q-jw-ldi">
-                                <rect key="frame" x="35" y="253.5" width="92" height="21"/>
+                                <rect key="frame" x="35" y="262" width="209" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -88,11 +88,11 @@
                             <constraint firstItem="RAE-Yo-Vek" firstAttribute="trailing" secondItem="dJx-UJ-qqt" secondAttribute="trailing" constant="40" id="0CV-KH-eBf"/>
                             <constraint firstItem="IcC-tI-46S" firstAttribute="leading" secondItem="RAE-Yo-Vek" secondAttribute="leading" constant="35" id="3yd-YM-YEy"/>
                             <constraint firstItem="RAE-Yo-Vek" firstAttribute="trailing" secondItem="IcC-tI-46S" secondAttribute="trailing" constant="40" id="ASo-9d-1TU"/>
-                            <constraint firstItem="RAE-Yo-Vek" firstAttribute="bottom" secondItem="dJx-UJ-qqt" secondAttribute="bottom" constant="135" id="PHk-T8-lgt"/>
-                            <constraint firstItem="RAE-Yo-Vek" firstAttribute="trailing" secondItem="c7q-jw-ldi" secondAttribute="trailing" constant="287" id="ZVl-bK-8QT"/>
+                            <constraint firstItem="RAE-Yo-Vek" firstAttribute="bottom" secondItem="dJx-UJ-qqt" secondAttribute="bottom" constant="84" id="An3-YW-C8g"/>
                             <constraint firstItem="c7q-jw-ldi" firstAttribute="leading" secondItem="RAE-Yo-Vek" secondAttribute="leading" constant="35" id="cVE-9P-RC3"/>
                             <constraint firstItem="dJx-UJ-qqt" firstAttribute="leading" secondItem="RAE-Yo-Vek" secondAttribute="leading" constant="35" id="dJY-IP-LCV"/>
                             <constraint firstItem="c7q-jw-ldi" firstAttribute="top" secondItem="IcC-tI-46S" secondAttribute="bottom" constant="44" id="llz-Jn-LEu"/>
+                            <constraint firstItem="RAE-Yo-Vek" firstAttribute="trailing" secondItem="c7q-jw-ldi" secondAttribute="trailing" constant="170" id="qWO-my-dbf"/>
                             <constraint firstItem="dJx-UJ-qqt" firstAttribute="top" secondItem="c7q-jw-ldi" secondAttribute="bottom" constant="8" symbolic="YES" id="sya-FX-e3R"/>
                             <constraint firstItem="IcC-tI-46S" firstAttribute="top" secondItem="RAE-Yo-Vek" secondAttribute="top" constant="41.5" id="w4r-1V-7jQ"/>
                         </constraints>
@@ -113,7 +113,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="YN8-Rc-Es9" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="R8G-RT-6Ba">
-                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                        <rect key="frame" x="0.0" y="44" width="414" height="104.5"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
