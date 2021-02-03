@@ -113,7 +113,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="YN8-Rc-Es9" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="R8G-RT-6Ba">
-                        <rect key="frame" x="0.0" y="44" width="414" height="104.5"/>
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
@@ -131,7 +131,7 @@
         <!--Navigation Controller-->
         <scene sceneID="fl8-x9-gOA">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Vwo-qb-agl" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="navDetail" automaticallyAdjustsScrollViewInsets="NO" id="Vwo-qb-agl" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="i9P-eG-i3W">
                         <rect key="frame" x="0.0" y="44" width="414" height="96"/>

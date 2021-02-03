@@ -24,7 +24,7 @@ extension ViewController: UISearchResultsUpdating {
   }
 }
 
-class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate {
+class ViewController: UITableViewController, TaskProtocol  {
     
     let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
     var allTasks = [Task]()
@@ -77,9 +77,11 @@ class ViewController: UITableViewController, TaskProtocol , UISearchBarDelegate 
     }
     
     func updateTask(task: Task, title: String, taskDescription: String) {
-        task.title = title
-        task.taskDescription = taskDescription
-        appDelegate.saveContext()
+        if task.title != title || task.taskDescription != taskDescription {
+            task.title = title
+            task.taskDescription = taskDescription
+            appDelegate.saveContext()
+        }
         tableView.reloadData()
     }
     

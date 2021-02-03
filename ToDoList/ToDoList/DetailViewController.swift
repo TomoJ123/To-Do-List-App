@@ -85,7 +85,7 @@ class DetailViewController: UIViewController {
                     }
                 }
             default :
-                print("Error adding new task!")
+                print("Error adding or updating task!")
         }
     }
 }
